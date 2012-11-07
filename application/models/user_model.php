@@ -1,0 +1,39 @@
+<?php
+class user_model extends CI_Model{
+	
+	function __construct(){
+		parent::__construct();
+		$this->load->library('rest', array(  
+        	'server' => REST_SERVICE,  
+			//'http_user' => 'admin',  
+			//'http_pass' => '1234',  
+			//'http_auth' => 'digest'  
+     	));  
+	}
+	
+	function getUser($id){
+		$user = $this->rest->get('user', array('id'=>$id), 'json');  
+		//print_r($users);die();
+		return $user->result;
+	}
+	
+	function getUsers($limit=10,$offset=0,$order='id',$sort='ASC'){
+		$param = array(
+			'limit'=>$limit,
+			'offset'=>$offset,
+			'order'=>$order,
+			'sort'=>$sort,
+		);		
+		$users = $this->rest->get('users', $param, 'json');  
+		if($users==null){
+			$users->status=false;
+			$users->error="Service to get user data can't be called.";
+		}
+		//my_dump_exit($users);
+		return $users;
+	}
+
+	function countUsers(){
+
+	}
+}

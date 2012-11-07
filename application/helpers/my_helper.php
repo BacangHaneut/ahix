@@ -1,0 +1,141 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		CodeIgniter
+ * @author		ExpressionEngine Dev Team
+ * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
+ * @license		http://codeigniter.com/user_guide/license.html
+ * @link		http://codeigniter.com
+ * @since		Version 1.0
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * CodeIgniter Array Helpers
+ *
+ * @package		CodeIgniter
+ * @subpackage	Helpers
+ * @category	Helpers
+ * @author		ExpressionEngine Dev Team
+ * @link		http://codeigniter.com/user_guide/helpers/array_helper.html
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Element
+ *
+ * Lets you determine whether an array index is set and whether it has a value.
+ * If the element is empty it returns FALSE (or whatever you specify as the default value.)
+ *
+ * @access	public
+ * @param	string
+ * @param	array
+ * @param	mixed
+ * @return	mixed	depends on what the array contains
+ */
+if ( ! function_exists('array_debug'))
+{
+	function array_debug($array)
+	{
+		if (is_array($array))
+		{
+			echo 'array['. count($array) .']=<br>';
+			echo '<dl>';
+			foreach ($array as $k1=>$v1){
+				echo '<dt>['. $k1 .']=';
+				if(is_array($v1)){
+					array_debug($v1);
+				}else{
+					echo $v1; 
+				}
+				echo '</dt>';
+			}
+			echo '</dl>';
+			echo '<br>';
+		}else{
+			echo 'This is not array';
+		}
+	}
+}
+
+function my_print_r ($param, $bool = TRUE) {
+	pre( print_r($param, $bool), FALSE);
+}
+
+function my_var_dump ($param) {
+	pre(var_dump($param));
+}
+
+function my_dump ($param) {
+	header('content-type:text/html');
+	echo '<pre>'."\n";
+	var_dump($param);
+	echo '</pre>'."\n";
+}
+
+function my_dump_exit ($param) {
+	header('content-type:text/html');
+	echo '<pre>'."\n";
+	var_dump($param);
+	echo '</pre>'."\n";
+	die();
+}
+
+function my_debug ($param) {
+	if (is_object($param)) {
+		pre('Object: ['.get_class($param). '] => '
+				. print_r(array_keys(get_object_vars($param)), TRUE), FALSE);
+	}
+}
+
+function my_debug_in ($param) {
+	if (is_object($param)) {
+		pre('Object: [' .get_class($param).' ] => Array', FALSE);
+		foreach (get_object_vars($param) as $key) {
+			my_debug($key);
+		}
+	}
+	if (is_array($param)) {
+		my_print_r($param);
+	}	
+}
+
+function my_class($name = NULL) {
+	$class = new ReflectionClass($name);
+	my_print_r(Reflection::export($class));
+
+}
+
+function pre($param, $bool = TRUE) {
+	if (!ini_get('xdebug.default_enable') || !$bool) {
+		echo "<pre>".$param ."</pre>\n";
+	}else {
+		echo $param;
+	}
+}
+
+function flash_message()
+{
+	// get flash message from CI instance
+	$ci =& get_instance();
+	$flashmsg = $ci->session->flashdata('msg');
+	$html = '';
+	if (is_array($flashmsg))
+	{
+		$html = '<div id="flashmessage" class="'.$flashmsg[type].'">
+			<img style="float: right; cursor: pointer" id="closemessage" src="'.base_url().'images/cross.png" />
+			<strong">'.$flashmsg['title'].'</strong>
+			<p style="margin-top:-3px;margin-bottom:-1px">'.$flashmsg['content'].'</p>
+			</div>';
+	}
+	return $html;
+}
+
+/* End of file my_helper.php */
+/* Location: ./application/helpers/my_helper.php */
